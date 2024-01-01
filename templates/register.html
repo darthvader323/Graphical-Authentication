@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+</head>
+<body>
+    <h2>User Registration</h2>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="flashes">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+
+    <form id="registrationForm" action="{{ url_for('register') }}" method="post" enctype="multipart/form-data">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <span id="availabilityMessage"></span>
+        <br><br>
+
+
+        {% for i in range(1, 10) %}
+            <label for="image{{ i }}">Upload Image {{ i }}:</label>
+            <input type="file" name="image{{ i }}" accept="image/*" required><br><br>
+        {% endfor %}
+
+        <input type="submit" value="Register">
+        <p>Already a user? <a href="{{ url_for('signin_page') }}">sign in</a>.</p>
+    </form>
+
+ 
+    <script>
+        var usernameInput = document.getElementById("username");
+        var availabilityMessage = document.getElementById("availabilityMessage");
+
+        usernameInput.addEventListener("input", function() {
+            var username = usernameInput.value;
+
+         
+            fetch('/check_username_availability', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username: username }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.available) {
+                    availabilityMessage.innerText = 'Username available!';
+                } else {
+                    availabilityMessage.innerText = 'Username not available. Please choose a different one.';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>

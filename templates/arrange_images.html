@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arrange Images</title>
+
+  
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <style>
+        #image-container {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding-left: 20px;
+        }
+
+        .draggable {
+            cursor: grab;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        img {
+            width: 100px;
+           
+            height: 100px;
+           
+            object-fit: cover;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 14in) {
+            img {
+                width: 70px;
+               
+                height: 70px;
+               
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Arrange Images for {{ user.username }}</h2>
+
+    <form id="arrange-form" method="post" action="{{ url_for('arrange_images', username=user.username) }}">
+        <div id="image-container">
+            {% for image in images %}
+            <div class="draggable" data-image-id="{{ image.unique_image_id }}">
+                <img src="data:image/png;base64,{{ image.image_data|base64_encode }}" alt="Image">
+
+            </div>
+            {% endfor %}
+        </div>
+
+        <input type="hidden" name="ordered_ids" id="ordered_ids" value="{{ current_order_ids|join(',') }}">
+        <button type="button" id="save-button">Save Order</button>
+    </form>
+
+    <script>
+        $(document).ready(function () {
+            $("#image-container").sortable({
+                update: function (event, ui) {
+                    updateOrderedIdsInput();
+                },
+                draggable: '.draggable',
+                tolerance: 'pointer',
+                cursorAt: { top: 50, left: 50 }
+            });
+            $(".draggable").on("mousedown", function () {
+                $(this).css("cursor", "grabbing");
+            }).on("mouseup", function () {
+                $(this).css("cursor", "grab");
+            });
+
+            const orderedIdsInput = $("#ordered_ids");
+
+            function updateOrderedIdsInput() {
+                const draggableElements = $(".draggable");
+                const currentOrder = [...draggableElements].map(el => $(el).data("imageId")).join(",");
+                orderedIdsInput.val(currentOrder);
+            }
+
+            $("#save-button").on("click", function () {
+                $("#arrange-form").submit();
+            });
+        });
+    </script>
+</body>
+
+</html>
