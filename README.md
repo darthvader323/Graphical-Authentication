@@ -21,3 +21,16 @@ o Python(for backend)
 o Framework-: flask   
 o SQLite for database  
 o HTML,JavaScript (frontend)  
+## How to Use:
+### Registration:
+• Provide a unique username.  
+• Upload and arrange nine distinct images.  
+• Save the registration information.  
+### Login:
+• Enter the registered username.  
+• Arrange the displayed images in the correct order to authenticate.  
+### Account Security:
+• Images are shown in random order and after every incorrect arrangement they get randomized.  
+• Account blocking after four consecutive unsuccessful login attempts
+## Installation
+• Download the repository from the link 
