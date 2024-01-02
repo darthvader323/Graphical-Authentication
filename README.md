@@ -33,4 +33,6 @@ o HTML,JavaScript (frontend)
 • Images are shown in random order and after every incorrect arrangement they get randomized.  
 • Account blocking after four consecutive unsuccessful login attempts
 ## Installation
-• Download the repository from the link 
+• Download the repository from the link https://github.com/darthvader323/Graphical-Authentication.git  
+• Make sure to install python,flask and SQLAlchemy.  
+• Run app.py and go to http://localhost:5000.
